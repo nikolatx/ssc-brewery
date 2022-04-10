@@ -16,7 +16,15 @@ public class PasswordEncodingTest {
 
     static final String PASSWORD = "password";
 
+    @Test
+    void testLdap() {
+        PasswordEncoder ldap = new LdapShaPasswordEncoder();
+        System.out.println(ldap.encode(PASSWORD));
+        System.out.println(ldap.encode(PASSWORD));
 
+        String encodedPassword = ldap.encode(PASSWORD);
+        assertTrue(ldap.matches(PASSWORD, encodedPassword));
+    }
 
 
     @Test
