@@ -20,18 +20,23 @@ public class PasswordEncodingTest {
 
     @Test
     void testBcrypt() {
-        PasswordEncoder bcrypt = new BCryptPasswordEncoder();
+        PasswordEncoder bcrypt = new BCryptPasswordEncoder(10);
 
         System.out.println(bcrypt.encode(PASSWORD));
         System.out.println(bcrypt.encode(PASSWORD));
-        System.out.println(bcrypt.encode("guru"));
+        System.out.println(bcrypt.encode("tiger"));
     }
 
     @Test
     void testSha256() {
         PasswordEncoder sha256 = new StandardPasswordEncoder();
-        System.out.println(sha256.encode(PASSWORD));
-        System.out.println(sha256.encode(PASSWORD));
+        String pass1 = sha256.encode(PASSWORD);
+        String pass2 = sha256.encode(PASSWORD);
+
+        System.out.println(pass1);
+        System.out.println(pass2);
+        assertTrue(sha256.matches(PASSWORD, pass1));
+        assertTrue(sha256.matches(PASSWORD, pass2));
         System.out.println(sha256.encode("password"));
 
     }
@@ -43,8 +48,11 @@ public class PasswordEncodingTest {
         System.out.println(ldap.encode(PASSWORD));
         System.out.println(ldap.encode("tiger"));
 
+
         String encodedPassword = ldap.encode(PASSWORD);
+        String encodedPassword1 = ldap.encode(PASSWORD);
         assertTrue(ldap.matches(PASSWORD, encodedPassword));
+        assertTrue(ldap.matches(PASSWORD, encodedPassword1));
     }
 
 
