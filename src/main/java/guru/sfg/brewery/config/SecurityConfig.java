@@ -26,6 +26,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
+    //creates parameter filter
+    public RestParameterAuthFilter restParameterAuthFilter(AuthenticationManager authenticationManager) {
+        //filter should be applied on all /api urls
+        RestParameterAuthFilter filter = new RestParameterAuthFilter(new AntPathRequestMatcher("/api/**"));
+        filter.setAuthenticationManager(authenticationManager);
+        return filter;
+    }
+
     @Bean
     PasswordEncoder passwordEncoder() {
         return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -36,7 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //add filter to execute before UsernamePasswordAuthenticationFilter
-        http.addFilterBefore(restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+        //http.addFilterBefore(restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+        //        .csrf().disable();
+
+        http.addFilterBefore(restParameterAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
 
         http.headers().frameOptions().disable();
