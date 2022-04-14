@@ -2,9 +2,7 @@ package guru.sfg.brewery.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,22 +30,19 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
         HttpServletRequest request = (HttpServletRequest)req;
         HttpServletResponse response = (HttpServletResponse)res;
 
-            if (this.logger.isDebugEnabled()) {
-                this.logger.debug("Request is to process authentication");
-            }
+        if (this.logger.isDebugEnabled())
+            this.logger.debug("Request is to process authentication");
 
-            try {
-                Authentication authResult = this.attemptAuthentication(request, response);
-                if (authResult !=null) {
-                    successfulAuthentication(request, response, chain, authResult);
-                } else {
-                    chain.doFilter(request, response);
-                }
-            } catch (AuthenticationException e) {
-                log.error("Authentication failed", e);
-                unsuccessfulAuthentication(request, response, e);
-            }
-
+        try {
+            Authentication authResult = this.attemptAuthentication(request, response);
+            if (authResult != null)
+                successfulAuthentication(request, response, chain, authResult);
+            else
+                chain.doFilter(request, response);
+        } catch (AuthenticationException e) {
+            log.error("Authentication Failed", e);
+            unsuccessfulAuthentication(request, response, e);
+        }
     }
 
     @Override
@@ -85,9 +80,8 @@ public class RestHeaderAuthFilter extends AbstractAuthenticationProcessingFilter
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Authentication success. Updating SecurityContextHolder to contain: " + authResult);
         }
-
+        //establishes the authorization within Spring Security context
         SecurityContextHolder.getContext().setAuthentication(authResult);
-
     }
 
     private String getPassword(HttpServletRequest httpServletRequest) {
