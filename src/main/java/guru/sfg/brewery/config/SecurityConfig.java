@@ -18,18 +18,18 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //creates filter
-    public RestHeaderAuthFilter restHeaderAuthFilter(AuthenticationManager authenticationManager) {
+    //creates parameter filter
+    public AbstractAuthFilter paramAuthFilter(AuthenticationManager authenticationManager) {
         //filter should be applied on all /api urls
-        RestHeaderAuthFilter filter = new RestHeaderAuthFilter(new AntPathRequestMatcher("/api/**"));
+        AbstractAuthFilter filter = new RestParameterAuthFilter(new AntPathRequestMatcher("/api/**"));
         filter.setAuthenticationManager(authenticationManager);
         return filter;
     }
 
-    //creates parameter filter
-    public RestParameterAuthFilter restParameterAuthFilter(AuthenticationManager authenticationManager) {
+    //creates header filter
+    public AbstractAuthFilter headerAuthFilter(AuthenticationManager authenticationManager) {
         //filter should be applied on all /api urls
-        RestParameterAuthFilter filter = new RestParameterAuthFilter(new AntPathRequestMatcher("/api/**"));
+        AbstractAuthFilter filter = new RestHeaderAuthFilter(new AntPathRequestMatcher("/api/**"));
         filter.setAuthenticationManager(authenticationManager);
         return filter;
     }
@@ -37,18 +37,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     PasswordEncoder passwordEncoder() {
         return SfgPasswordEncoderFactories.createDelegatingPasswordEncoder();
-
     }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //add filter to execute before UsernamePasswordAuthenticationFilter
-        //http.addFilterBefore(restHeaderAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
-        //        .csrf().disable();
-
-        http.addFilterBefore(restParameterAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+        http.addFilterBefore(headerAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
+
+        http.addFilterBefore(paramAuthFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class);
 
         http.headers().frameOptions().disable();
                  http
