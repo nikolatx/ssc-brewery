@@ -27,16 +27,22 @@ public class UserLoader implements CommandLineRunner {
     }
 
     private void loadUserData() {
-        Authority admin = Authority.builder().role("ADMIN").build();
-        Authority user = Authority.builder().role("USER").build();
-        Authority customer = Authority.builder().role("CUSTOMER").build();
 
-        if (authorityRepository.findAll().stream().noneMatch(e->e.getRole().equalsIgnoreCase(admin.getRole())))
+        Authority admin = authorityRepository.findAll().stream().filter(e->e.getRole().equalsIgnoreCase("admin")).findFirst().orElse(null);
+        if (admin==null) {
+            admin = Authority.builder().role("ADMIN").build();
             authorityRepository.save(admin);
-        if (authorityRepository.findAll().stream().noneMatch(e->e.getRole().equalsIgnoreCase(user.getRole())))
+        }
+        Authority user = authorityRepository.findAll().stream().filter(e->e.getRole().equalsIgnoreCase("user")).findFirst().orElse(null);
+        if (user==null) {
+            user = Authority.builder().role("USER").build();
             authorityRepository.save(user);
-        if (authorityRepository.findAll().stream().noneMatch(e->e.getRole().equalsIgnoreCase(customer.getRole())))
+        }
+        Authority customer = authorityRepository.findAll().stream().filter(e->e.getRole().equalsIgnoreCase("customer")).findFirst().orElse(null);
+        if (customer==null) {
+            customer = Authority.builder().role("CUSTOMER").build();
             authorityRepository.save(customer);
+        }
 
         if (userRepository.findByUsername("spring").isEmpty()) {
             User spring = new User();
@@ -49,7 +55,7 @@ public class UserLoader implements CommandLineRunner {
 
         if (userRepository.findByUsername("user").isEmpty()) {
             User user1 = new User();
-            user1.getAuthorities().add(admin);
+            user1.getAuthorities().add(user);
             user1.setUsername("user");
             user1.setPassword(passwordEncoder.encode("password"));
             userRepository.save(user1);
@@ -58,7 +64,7 @@ public class UserLoader implements CommandLineRunner {
 
         if (userRepository.findByUsername("scott").isEmpty()) {
             User scott = new User();
-            scott.getAuthorities().add(admin);
+            scott.getAuthorities().add(customer);
             scott.setUsername("scott");
             scott.setPassword(passwordEncoder.encode("tiger"));
             userRepository.save(scott);
