@@ -25,12 +25,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //h2 console config
         http.headers().frameOptions().sameOrigin();
+        http.csrf().disable();
 
         http
             .authorizeRequests(authorize -> {
-                authorize.antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/find", "/beers*").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll()
-                    .antMatchers("/h2-console/**").permitAll()
+                authorize
+                        .antMatchers("/h2-console/**").permitAll()
+                        .antMatchers("/", "/webjars/**", "/login", "/resources/**", "/beers/find", "/beers*").permitAll()
+                        .antMatchers(HttpMethod.GET, "/api/v1/beer/**").permitAll()
+                        .mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**").hasRole("ADMIN")
                     .mvcMatchers(HttpMethod.GET,"/api/v1/beerUpc/{upc}").permitAll();
              })
             .authorizeRequests()
