@@ -28,17 +28,17 @@ public class UserLoader implements CommandLineRunner {
 
     private void loadUserData() {
 
-        Authority admin = authorityRepository.findAll().stream().filter(e->e.getRole().equalsIgnoreCase("admin")).findFirst().orElse(null);
+        Authority admin = authorityRepository.findAll().stream().filter(e->e.getPermission().equalsIgnoreCase("admin")).findFirst().orElse(null);
         if (admin==null) {
             admin = Authority.builder().role("ROLE_ADMIN").build();
             authorityRepository.save(admin);
         }
-        Authority user = authorityRepository.findAll().stream().filter(e->e.getRole().equalsIgnoreCase("user")).findFirst().orElse(null);
+        Authority user = authorityRepository.findAll().stream().filter(e->e.getPermission().equalsIgnoreCase("user")).findFirst().orElse(null);
         if (user==null) {
             user = Authority.builder().role("ROLE_USER").build();
             authorityRepository.save(user);
         }
-        Authority customer = authorityRepository.findAll().stream().filter(e->e.getRole().equalsIgnoreCase("customer")).findFirst().orElse(null);
+        Authority customer = authorityRepository.findAll().stream().filter(e->e.getPermission().equalsIgnoreCase("customer")).findFirst().orElse(null);
         if (customer==null) {
             customer = Authority.builder().role("ROLE_CUSTOMER").build();
             authorityRepository.save(customer);
