@@ -36,15 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/", "/webjars/**", "/login", "/resources/**").permitAll()
                         .antMatchers("/beers/find", "/beers*").hasAnyRole("ADMIN", "CUSTOMER", "USER")
 
-                        .antMatchers("/brewery/breweries*").hasAnyRole("ADMIN", "CUSTOMER")
-                        .antMatchers(HttpMethod.GET, "/brewery/api/v1/breweries").hasAnyRole("ADMIN", "CUSTOMER")
+                        .mvcMatchers("/brewery/breweries*").hasAnyRole("ADMIN", "CUSTOMER")
+                        .mvcMatchers(HttpMethod.GET, "/brewery/api/v1/breweries").hasAnyRole("ADMIN", "CUSTOMER")
 
 
-                        .antMatchers(HttpMethod.GET, "/api/v1/beer/**").hasAnyRole("ADMIN", "USER", "CUSTOMER")
+                        //.antMatchers(HttpMethod.GET, "/api/v1/beer/**").hasAnyRole("ADMIN", "USER", "CUSTOMER")
                         //.mvcMatchers(HttpMethod.DELETE, "/api/v1/beer/**").hasRole("ADMIN")
-                        .mvcMatchers("/beers/find", "/beers/{beerId}").hasAnyRole("ADMIN", "CUSTOMER", "USER")
-                        .mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}")
-                            .hasAnyRole("ADMIN", "CUSTOMER", "USER");
+                        .mvcMatchers("/beers/find", "/beers/{beerId}").hasAnyRole("ADMIN", "CUSTOMER", "USER");
+                        //.mvcMatchers(HttpMethod.GET, "/api/v1/beerUpc/{upc}")
+                        //    .hasAnyRole("ADMIN", "CUSTOMER", "USER");
 
 
              })

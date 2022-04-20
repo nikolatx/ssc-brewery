@@ -18,9 +18,11 @@ package guru.sfg.brewery.bootstrap;
 
 import guru.sfg.brewery.domain.*;
 import guru.sfg.brewery.domain.security.Authority;
+import guru.sfg.brewery.domain.security.Role;
 import guru.sfg.brewery.domain.security.User;
 import guru.sfg.brewery.repositories.*;
 import guru.sfg.brewery.repositories.security.AuthorityRepository;
+import guru.sfg.brewery.repositories.security.RoleRepository;
 import guru.sfg.brewery.repositories.security.UserRepository;
 import guru.sfg.brewery.web.model.BeerStyleEnum;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +50,8 @@ public class DefaultBreweryLoader implements CommandLineRunner {
     private final BeerInventoryRepository beerInventoryRepository;
     private final BeerOrderRepository beerOrderRepository;
     private final CustomerRepository customerRepository;
+    private final AuthorityRepository authorityRepository;
+    private final RoleRepository roleRepository;
 
 
     @Override
@@ -57,6 +61,17 @@ public class DefaultBreweryLoader implements CommandLineRunner {
     }
 
     private void loadCustomerData() {
+
+        /*Authority createCustomer = authorityRepository.save(Authority.builder().permission("customer.create").build());
+        Authority updateCustomer = authorityRepository.save(Authority.builder().permission("customer.update").build());
+        Authority readCustomer = authorityRepository.save(Authority.builder().permission("customer.read").build());
+        Authority deleteCustomer = authorityRepository.save(Authority.builder().permission("customer.delete").build());
+
+        Role adminRole = roleRepository.save(Role.builder().name('ADMo'))
+        Role customerRole = Role.builder().authorities(Set.of(readCustomer)).build();
+
+*/
+
         Customer tastingRoom = Customer.builder()
                 .customerName(TASTING_ROOM)
                 .apiKey(UUID.randomUUID())
