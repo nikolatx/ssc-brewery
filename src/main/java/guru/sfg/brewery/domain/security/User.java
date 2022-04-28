@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 @Builder
 public class User implements UserDetails, CredentialsContainer {
 
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -61,6 +59,14 @@ public class User implements UserDetails, CredentialsContainer {
     private boolean credentialsNonExpired = true;
     @Builder.Default
     private boolean enabled = true;
+
+    @Builder.Default
+    private Boolean useGoogle2fa = false;
+
+    private String google2FaSecret;
+
+    @Transient
+    private Boolean google2FaRequired = true;
 
     @Override
     public void eraseCredentials() {
